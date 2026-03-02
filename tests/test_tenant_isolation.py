@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.db import models, transaction
+from django.db import models
 from apps.core.models import TenantAwareModel
 import uuid
 

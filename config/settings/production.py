@@ -1,4 +1,9 @@
+# noqa: F403  # wildcard import used for settings inheritance
 from .base import *
+
+import os
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
 
 DEBUG = False
 
@@ -12,8 +17,4 @@ CSRF_COOKIE_SECURE = True
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
 # Sentry integration
-import os
-import sentry_sdk
-from sentry_sdk.integrations.django import DjangoIntegration
-
 sentry_sdk.init(dsn=os.environ.get("SENTRY_DSN", ""), integrations=[DjangoIntegration()])
