@@ -1,0 +1,37 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: amss
+    ports:
+      - "5432:5432"
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+  localstack:
+    image: localstack/localstack:latest
+    environment:
+      SERVICES: s3,sqs
+      DEBUG: 1
+    ports:
+      - "4566:4566"
+  app:
+    build: ../
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - ..:/code
+    ports:
+      - "8000:8000"
+  celery:
+    build: ../
+    command: celery -A config worker --loglevel=info
+    volumes:
+      - ..:/code
+    depends_on:
+      - redis
+      - db

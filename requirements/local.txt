@@ -1,0 +1,5 @@
+-r base.txt
+pytest==7.3.2
+factory-boy==3.2.1
+moto==4.1.0
+django-debug-toolbar==4.0

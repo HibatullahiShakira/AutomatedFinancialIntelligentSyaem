@@ -1,0 +1,33 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.sqlite3
+
+# Virtual environments
+.venv/
+env/
+ENV/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+/media
+/staticfiles
+
+# Environment variables
+.env
+.env.*
+
+# Terraform state
+*.tfstate
+*.tfstate.*
+.terraform/
+
+# VSCode
+.vscode/
+
+# Pip
+pip-wheel-metadata/
