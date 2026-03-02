@@ -12,7 +12,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install linters
-        run: pip install ruff mypy
+        run: pip install ruff==0.0.309 mypy
       - name: Run linters
         run: ruff . && mypy .
 
