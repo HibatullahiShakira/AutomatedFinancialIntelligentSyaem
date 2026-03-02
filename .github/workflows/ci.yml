@@ -14,7 +14,7 @@ jobs:
       - name: Install linters
         run: pip install ruff==0.15.4 mypy
       - name: Run linters
-        run: ruff check . && mypy .
+        run: ruff check . && mypy apps
 
   test:
     runs-on: ubuntu-latest

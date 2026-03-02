@@ -9,6 +9,7 @@ ignore = ["E501"]
 python_version = "3.12"
 plugins = []
 ignore_missing_imports = true
+namespace_packages = true
 strict = true
 
 [tool.coverage.run]
