@@ -12,9 +12,9 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install linters
-        run: pip install ruff==0.0.309 mypy
+        run: pip install ruff==0.15.4 mypy
       - name: Run linters
-        run: ruff . && mypy .
+        run: ruff check . && mypy .
 
   test:
     runs-on: ubuntu-latest
