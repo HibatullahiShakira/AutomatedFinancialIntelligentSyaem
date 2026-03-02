@@ -1,5 +1,4 @@
-# noqa: F403  # wildcard import used for settings inheritance
-from .base import *
+from .base import *  # noqa: F403  # wildcard import used for settings inheritance
 
 import os
 import sentry_sdk

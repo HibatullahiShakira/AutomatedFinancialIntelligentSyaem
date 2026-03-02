@@ -1,5 +1,4 @@
-# noqa: F403  # wildcard import is intentional for settings
-from .base import *
+from .base import *  # noqa: F403  # wildcard import is intentional for settings
 
 # Development-specific settings
 DEBUG = True
