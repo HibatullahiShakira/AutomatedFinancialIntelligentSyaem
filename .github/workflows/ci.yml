@@ -28,4 +28,6 @@ jobs:
       - name: Install dependencies
         run: pip install -r requirements/local.txt
       - name: Run tests
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.local
         run: pytest --maxfail=1 --disable-warnings -q
