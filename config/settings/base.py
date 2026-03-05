@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
@@ -20,6 +21,16 @@ INSTALLED_APPS = [
     "rest_framework",
     # internal
     "apps.core",
+    "apps.finance",
+    "apps.billing",
+    "apps.customers",
+    "apps.risk",
+    "apps.assets",
+    "apps.liabilities",
+    "apps.insurance",
+    "apps.tax",
+    "apps.notifications",
+    "apps.agent",
 ]
 
 MIDDLEWARE = [
@@ -32,6 +43,7 @@ MIDDLEWARE = [
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     # custom middleware
     "apps.core.middleware.CorrelationIdMiddleware",
+    "apps.core.middleware.TenantContextMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -56,17 +68,9 @@ DATABASES = {}
 
 db_url = os.environ.get("DATABASE_URL")
 if db_url:
-    # expected format: postgresql://user:password@host:port/dbname
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": db_url,
-    }
+    DATABASES["default"] = dj_database_url.parse(db_url, conn_max_age=600)
 else:
-    # fall back to sqlite for local convenience
-    DATABASES["default"] = {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
+    DATABASES["default"] = dj_database_url.parse(f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 
 AUTH_PASSWORD_VALIDATORS = []
 
@@ -76,8 +80,17 @@ TIME_ZONE = "UTC"
 
 USE_I18N = True
 
-USE_L10N = True
-
 USE_TZ = True
 
 STATIC_URL = "/static/"
+
+DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+REST_FRAMEWORK = {
+    "DEFAULT_RENDERER_CLASSES": [
+        "rest_framework.renderers.JSONRenderer",
+    ],
+}
+
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", "redis://localhost:6379/1")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", "redis://localhost:6379/2")

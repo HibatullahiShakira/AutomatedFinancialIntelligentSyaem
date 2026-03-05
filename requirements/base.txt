@@ -1,6 +1,7 @@
 Django==5.0
 # psycopg 3.0 was not available; use a current 3.x release
 psycopg[binary]>=3.0,<4.0
+dj-database-url==2.2.0
 redis==4.5.5
 celery==5.3.1
 djangorestframework==3.14.0

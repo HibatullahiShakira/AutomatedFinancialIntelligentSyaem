@@ -1,0 +1,11 @@
+FROM python:3.12-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
+
+WORKDIR /code
+
+COPY requirements/base.txt requirements/local.txt requirements/production.txt /code/requirements/
+RUN pip install --no-cache-dir -r /code/requirements/local.txt
+
+COPY . /code
