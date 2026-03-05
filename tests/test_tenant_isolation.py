@@ -34,6 +34,6 @@ class TenantIsolationTests(TestCase):
         self.assertEqual(len(tenant1_records), 1)
         self.assertEqual(tenant1_records[0].name, "Tenant1 Record")
         self.assertNotIn("Tenant2 Record", [r.name for r in tenant1_records])
-        
+
         self.assertEqual(len(tenant2_records), 1)
         self.assertEqual(tenant2_records[0].name, "Tenant2 Record")

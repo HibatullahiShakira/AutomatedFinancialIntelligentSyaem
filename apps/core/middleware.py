@@ -3,11 +3,6 @@ from django.utils.deprecation import MiddlewareMixin
 from typing import Any
 
 
-import uuid
-from django.utils.deprecation import MiddlewareMixin
-from typing import Any
-
-
 class CorrelationIdMiddleware(MiddlewareMixin):  # type: ignore[misc]
     """Assign unique ID to every request for distributed tracing. See CODE_LEARNING_GUIDE.md"""
     def process_request(self, request: Any) -> None:

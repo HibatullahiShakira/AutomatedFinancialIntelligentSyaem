@@ -2,10 +2,6 @@ from django.db import models
 import uuid
 
 
-from django.db import models
-import uuid
-
-
 class TenantAwareModel(models.Model):  # type: ignore[misc]
     """
     Base model for all business entities. See CODE_LEARNING_GUIDE.md for design rationale.

@@ -163,9 +163,6 @@ class TenantAwareModelTest(TestCase):
 
     def test_tenant_id_has_index(self):
         """tenant_id should be indexed for query performance."""
-        from django.db import connection
-        from django.db.models import Index
-
         # Get the model's fields
         field = MiddlewareTestModel._meta.get_field('tenant_id')
         # Field should be indexed
@@ -197,11 +194,11 @@ class TenantAwareModelTest(TestCase):
 
     def test_different_tenants_isolated_in_queries(self):
         """Verify basic isolation: queries by tenant_id return correct records."""
-        tenant_1_obj = MiddlewareTestModel.objects.create(
+        MiddlewareTestModel.objects.create(
             tenant_id=self.tenant_id_1,
             name="Tenant 1 Record"
         )
-        tenant_2_obj = MiddlewareTestModel.objects.create(
+        MiddlewareTestModel.objects.create(
             tenant_id=self.tenant_id_2,
             name="Tenant 2 Record"
         )
