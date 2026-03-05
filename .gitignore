@@ -31,3 +31,10 @@ db.sqlite3
 
 # Pip
 pip-wheel-metadata/
+
+# Documentation (for learning/interview preparation, not committed)
+IMPLEMENTATION_PLAN.md
+ARCHITECTURE.md
+INTERVIEW_GUIDE.md
+CODE_LEARNING_GUIDE.md
+PORTFOLIO_PITCH.md
