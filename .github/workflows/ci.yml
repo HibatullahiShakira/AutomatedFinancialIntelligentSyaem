@@ -67,6 +67,14 @@ jobs:
           python-version: "3.12"
       - name: Install dependencies
         run: pip install -r requirements/local.txt
+      - name: Apply database migrations
+        env:
+          DJANGO_SETTINGS_MODULE: config.settings.local
+          DATABASE_URL: postgresql://user:password@localhost:5432/amss
+          REDIS_URL: redis://localhost:6379/0
+          CELERY_BROKER_URL: redis://localhost:6379/1
+          CELERY_RESULT_BACKEND: redis://localhost:6379/2
+        run: python manage.py migrate --noinput
       - name: Run tests with coverage gate
         env:
           DJANGO_SETTINGS_MODULE: config.settings.local
