@@ -12,7 +12,14 @@ ignore_missing_imports = true
 namespace_packages = true
 explicit_package_bases = true
 mypy_path = "$MYPY_CONFIG_FILE_DIR"
-strict = true
+
+# Type checking settings (relaxed for Django compatibility)
+disallow_untyped_defs = false
+disallow_any_generics = false
+warn_return_any = false
+warn_unused_ignores = true
+no_implicit_optional = true
+strict_equality = true
 
 [tool.coverage.run]
 branch = true
