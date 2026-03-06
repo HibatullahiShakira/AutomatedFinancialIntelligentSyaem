@@ -1,15 +1,38 @@
 import uuid
+import time
+import logging
 from django.utils.deprecation import MiddlewareMixin
 from django.http import JsonResponse
 from typing import Any
-from apps.core.auth_utils import verify_access_token
+from apps.core.auth_utils import verify_access_token, is_access_token_revoked
 from apps.core.models import User
+
+logger = logging.getLogger("amss.requests")
 
 
 class CorrelationIdMiddleware(MiddlewareMixin):
     """Assign unique ID to every request for distributed tracing. See CODE_LEARNING_GUIDE.md"""
     def process_request(self, request: Any) -> None:
         request.correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
+        request._start_time = time.monotonic()
+
+
+class RequestLoggingMiddleware(MiddlewareMixin):
+    """Log method, path, status code, and duration for every request."""
+
+    def process_response(self, request: Any, response: Any) -> Any:
+        start = getattr(request, "_start_time", None)
+        duration_ms = round((time.monotonic() - start) * 1000) if start is not None else -1
+        correlation_id = getattr(request, "correlation_id", "-")
+        logger.info(
+            "%s %s %s %dms cid=%s",
+            request.method,
+            request.path,
+            response.status_code,
+            duration_ms,
+            correlation_id,
+        )
+        return response
 
 
 class JWTAuthenticationMiddleware(MiddlewareMixin):
@@ -48,6 +71,13 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
                 status=401
             )
 
+        # Check if access token has been revoked (e.g. after logout)
+        if is_access_token_revoked(payload):
+            return JsonResponse(
+                {"error": "Token has been revoked"},
+                status=401
+            )
+
         # Get user from payload
         try:
             user = User.objects.get(id=payload["user_id"])
@@ -66,6 +96,7 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):
         # Set request attributes
         request.user = user
         request.tenant_id = payload.get("tenant_id")
+        request.jwt_payload = payload
 
         return None
 

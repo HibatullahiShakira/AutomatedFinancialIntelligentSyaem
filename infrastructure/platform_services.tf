@@ -73,7 +73,7 @@ resource "aws_db_instance" "main" {
   vpc_security_group_ids = [aws_security_group.db.id]
   publicly_accessible    = false
   skip_final_snapshot    = true
-  multi_az               = false
+  multi_az               = var.multi_az_enabled
 }
 
 resource "aws_elasticache_subnet_group" "main" {

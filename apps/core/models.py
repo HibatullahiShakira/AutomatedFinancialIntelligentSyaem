@@ -38,6 +38,11 @@ class User(AbstractUser):
         related_name="users",
         help_text="Tenants this user has access to"
     )
+    # Email verification
+    is_email_verified = models.BooleanField(default=False)
+    # TOTP / MFA
+    totp_secret = models.CharField(max_length=64, null=True, blank=True)
+    totp_enabled = models.BooleanField(default=False)
 
     class Meta:
         db_table = "users"
@@ -98,6 +103,33 @@ class RefreshToken(models.Model):
         """Check if token is still valid (not expired, not revoked)."""
         from django.utils import timezone
         return not self.revoked and self.expires_at > timezone.now()
+
+
+class LoginAttempt(models.Model):
+    """
+    Tracks login attempts for audit trail and brute-force analysis.
+    Failed attempts are rate-limited at the view level (DRF throttling).
+    """
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    username = models.CharField(max_length=150, db_index=True)
+    ip_address = models.GenericIPAddressField(null=True, blank=True, db_index=True)
+    timestamp = models.DateTimeField(auto_now_add=True, db_index=True)
+    success = models.BooleanField(default=False)
+    user = models.ForeignKey(
+        User,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="login_attempts",
+    )
+
+    class Meta:
+        db_table = "login_attempts"
+        ordering = ["-timestamp"]
+
+    def __str__(self) -> str:
+        status = "success" if self.success else "failure"
+        return f"Login {status} for {self.username} at {self.timestamp}"
 
 
 class MiddlewareTestModel(TenantAwareModel):

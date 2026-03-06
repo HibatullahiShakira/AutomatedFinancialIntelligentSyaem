@@ -6,6 +6,18 @@ from sentry_sdk.integrations.django import DjangoIntegration
 
 DEBUG = False
 
+# Redis cache for throttling, token revocation blacklist, and session caching
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": os.environ.get("REDIS_URL", "redis://localhost:6379/0"),
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+        "KEY_PREFIX": "amss",
+    }
+}
+
 # Security hardening
 SECURE_HSTS_SECONDS = 31536000
 SECURE_SSL_REDIRECT = True

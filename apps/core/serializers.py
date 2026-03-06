@@ -87,7 +87,7 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["id", "username", "email", "first_name", "last_name", "tenants"]
+        fields = ["id", "username", "email", "first_name", "last_name", "is_email_verified", "tenants"]
 
     def get_tenants(self, obj: User) -> list:
         """Get user's tenants with roles."""
@@ -109,3 +109,30 @@ class TenantSerializer(serializers.ModelSerializer):
         model = Tenant
         fields = ["id", "name", "created_at", "is_active"]
         read_only_fields = ["id", "created_at"]
+
+
+class EmailVerificationSerializer(serializers.Serializer):
+    """Serializer for email address verification."""
+    token = serializers.CharField(required=True)
+
+
+class ForgotPasswordSerializer(serializers.Serializer):
+    """Serializer for requesting a password reset link."""
+    email = serializers.EmailField(required=True)
+
+
+class ResetPasswordSerializer(serializers.Serializer):
+    """Serializer for completing a password reset."""
+    token = serializers.CharField(required=True)
+    new_password = serializers.CharField(required=True, write_only=True, validators=[validate_password])
+
+
+class TOTPVerifySerializer(serializers.Serializer):
+    """Serializer for verifying and activating TOTP (completes setup flow)."""
+    code = serializers.CharField(required=True, min_length=6, max_length=6)
+
+
+class TOTPAuthSerializer(serializers.Serializer):
+    """Serializer for completing MFA login with a TOTP code."""
+    mfa_token = serializers.CharField(required=True)
+    code = serializers.CharField(required=True, min_length=6, max_length=6)

@@ -57,3 +57,9 @@ variable "enable_stateful_resources" {
   type        = bool
   default     = false
 }
+
+variable "multi_az_enabled" {
+  description = "Enable Multi-AZ for RDS (recommended for production)"
+  type        = bool
+  default     = false
+}
