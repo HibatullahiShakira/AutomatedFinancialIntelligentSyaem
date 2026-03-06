@@ -21,7 +21,6 @@ from .models import (
     JournalEntry,
     JournalEntryLine,
     JournalEntrySource,
-    BalanceSnapshot,
 )
 
 logger = logging.getLogger("amss.finance")

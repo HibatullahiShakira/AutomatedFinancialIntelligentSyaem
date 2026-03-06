@@ -11,7 +11,6 @@ Test coverage:
   - Tenant Isolation: Tenant A cannot read Tenant B's accounts or journals
   - RBAC: VIEWER cannot create/post; ACCOUNTANT/OWNER can
 """
-import pytest
 from decimal import Decimal
 from datetime import date, timedelta
 
@@ -21,7 +20,7 @@ from apps.core.models import Tenant, User, UserTenant
 from apps.core.auth_utils import generate_access_token
 from apps.finance.models import (
     Account, AccountType, AccountCategory,
-    JournalEntry, JournalEntryLine, JournalEntrySource,
+    JournalEntry, JournalEntrySource,
 )
 from apps.finance.services import (
     seed_chart_of_accounts,
