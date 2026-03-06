@@ -38,7 +38,16 @@ class RequestLoggingMiddleware(MiddlewareMixin):
 class JWTAuthenticationMiddleware(MiddlewareMixin):
     """Extract and validate JWT from Authorization header."""
 
-    EXEMPT_PATHS = ["/api/auth/register/", "/api/auth/login/", "/api/auth/refresh/", "/admin/"]
+    EXEMPT_PATHS = [
+        "/api/auth/register/",
+        "/api/auth/login/",
+        "/api/auth/refresh/",
+        "/api/auth/verify-email/",
+        "/api/auth/forgot-password/",
+        "/api/auth/reset-password/",
+        "/api/auth/totp/authenticate/",
+        "/admin/",
+    ]
 
     def process_request(self, request: Any) -> Any:
         # Skip authentication for exempt paths
