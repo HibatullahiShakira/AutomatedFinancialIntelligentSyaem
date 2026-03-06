@@ -166,8 +166,22 @@ def refresh_token(request):
 
     access_token = generate_access_token(user.id, tenant_id)
 
+    # Implement refresh token rotation: revoke old token after use (security best practice)
+    refresh_token_obj.revoked = True
+    refresh_token_obj.revoked_at = timezone.now()
+    refresh_token_obj.save()
+
+    # Generate new refresh token
+    new_refresh_token_str = generate_refresh_token(user.id)
+    RefreshToken.objects.create(
+        user=user,
+        token=new_refresh_token_str,
+        expires_at=timezone.now() + timezone.timedelta(seconds=604800)
+    )
+
     return Response({
-        "access_token": access_token
+        "access_token": access_token,
+        "refresh_token": new_refresh_token_str
     }, status=status.HTTP_200_OK)
 
 

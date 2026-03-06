@@ -3,7 +3,7 @@ Authentication utilities for JWT token generation and validation.
 """
 import jwt
 import uuid
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 from typing import Dict, Any, Optional
 from django.conf import settings
 
@@ -22,8 +22,8 @@ def generate_access_token(user_id: uuid.UUID, tenant_id: Optional[uuid.UUID] = N
     payload = {
         "user_id": str(user_id),
         "token_type": "access",
-        "exp": datetime.utcnow() + timedelta(seconds=settings.JWT_ACCESS_TOKEN_LIFETIME),
-        "iat": datetime.utcnow(),
+        "exp": datetime.now(timezone.utc) + timedelta(seconds=settings.JWT_ACCESS_TOKEN_LIFETIME),
+        "iat": datetime.now(timezone.utc),
     }
 
     if tenant_id:
@@ -45,8 +45,8 @@ def generate_refresh_token(user_id: uuid.UUID) -> str:
     payload = {
         "user_id": str(user_id),
         "token_type": "refresh",
-        "exp": datetime.utcnow() + timedelta(seconds=settings.JWT_REFRESH_TOKEN_LIFETIME),
-        "iat": datetime.utcnow(),
+        "exp": datetime.now(timezone.utc) + timedelta(seconds=settings.JWT_REFRESH_TOKEN_LIFETIME),
+        "iat": datetime.now(timezone.utc),
         "jti": str(uuid.uuid4()),  # Unique token ID for revocation
     }
 

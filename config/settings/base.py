@@ -4,8 +4,11 @@ import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
-SECRET_KEY = os.environ.get("SECRET_KEY", "unsafe-secret")
 DEBUG = os.environ.get("DEBUG", "False") == "True"
+
+# Use SECRET_KEY from environment, or insecure default for development
+# Production deployments MUST set SECRET_KEY via environment variable
+SECRET_KEY = os.environ.get("SECRET_KEY", "django-insecure-dev-key-ONLY-FOR-DEVELOPMENT")
 ALLOWED_HOSTS = os.environ.get("ALLOWED_HOSTS", "").split(",") if os.environ.get("ALLOWED_HOSTS") else []
 
 INSTALLED_APPS = [
