@@ -7,41 +7,15 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ("core", "0001_initial"),
+        ("core", "0003_dummy"),
     ]
 
     operations = [
-        # Add MiddlewareTestModel (used in test_core.py)
-        migrations.CreateModel(
-            name="MiddlewareTestModel",
-            fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("tenant_id", models.UUIDField(db_index=True, default=uuid.uuid4)),
-                ("name", models.CharField(max_length=100)),
-            ],
-            options={
-                "db_table": "core_middlewaretestmodel",
-            },
-        ),
-        # Add Dummy model (used in test_tenant_isolation.py)
-        migrations.CreateModel(
-            name="Dummy",
-            fields=[
-                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
-                ("tenant_id", models.UUIDField(db_index=True, default=uuid.uuid4)),
-                ("name", models.CharField(max_length=100)),
-            ],
-            options={
-                "db_table": "core_dummy",
-            },
-        ),
-        # Add email verification field to User
         migrations.AddField(
             model_name="user",
             name="is_email_verified",
             field=models.BooleanField(default=False),
         ),
-        # Add TOTP fields to User
         migrations.AddField(
             model_name="user",
             name="totp_secret",
@@ -52,7 +26,6 @@ class Migration(migrations.Migration):
             name="totp_enabled",
             field=models.BooleanField(default=False),
         ),
-        # Add LoginAttempt model
         migrations.CreateModel(
             name="LoginAttempt",
             fields=[
