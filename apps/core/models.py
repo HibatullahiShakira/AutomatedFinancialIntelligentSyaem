@@ -114,3 +114,4 @@ class Dummy(TenantAwareModel):
 
     class Meta:
         db_table = "core_dummy"
+        app_label = "core"
