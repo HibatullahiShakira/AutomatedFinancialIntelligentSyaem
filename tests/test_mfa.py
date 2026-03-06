@@ -6,7 +6,7 @@ import pyotp
 from django.contrib.auth import get_user_model
 from rest_framework.test import APIClient
 from apps.core.models import Tenant, UserTenant
-from apps.core.auth_utils import generate_mfa_token, generate_totp_secret
+from apps.core.auth_utils import generate_totp_secret
 
 User = get_user_model()
 
