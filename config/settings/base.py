@@ -39,6 +39,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "apps.core.middleware.CorrelationIdMiddleware",
+    "apps.core.middleware.JWTAuthenticationMiddleware",
     "apps.core.middleware.TenantContextMiddleware",
 ]
 
@@ -69,7 +70,20 @@ if db_url:
 else:
     DATABASES["default"] = dj_database_url.parse(f"sqlite:///{BASE_DIR / 'db.sqlite3'}")
 
-AUTH_PASSWORD_VALIDATORS = []
+# Custom user model for multi-tenant authentication
+AUTH_USER_MODEL = "core.User"
+
+AUTH_PASSWORD_VALIDATORS = [
+    {"NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator"},
+    {"NAME": "django.contrib.auth.password_validation.MinimumLengthValidator", "OPTIONS": {"min_length": 8}},
+    {"NAME": "django.contrib.auth.password_validation.CommonPasswordValidator"},
+    {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
+]
+
+# JWT Configuration
+JWT_SECRET_KEY = os.environ.get("JWT_SECRET_KEY", SECRET_KEY)
+JWT_ACCESS_TOKEN_LIFETIME = 3600  # 1 hour in seconds
+JWT_REFRESH_TOKEN_LIFETIME = 604800  # 7 days in seconds
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
