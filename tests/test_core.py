@@ -8,16 +8,7 @@ from django.http import HttpResponse
 import uuid
 from apps.core.middleware import CorrelationIdMiddleware, TenantContextMiddleware
 from apps.core.exceptions import AMSSException
-from apps.core.models import TenantAwareModel
-from django.db import models
-
-
-class MiddlewareTestModel(TenantAwareModel):
-    """Test model for middleware testing."""
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        app_label = "core"
+from apps.core.models import TenantAwareModel, MiddlewareTestModel
 
 
 def dummy_view(request):

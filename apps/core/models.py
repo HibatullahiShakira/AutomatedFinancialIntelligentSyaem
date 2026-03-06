@@ -98,3 +98,11 @@ class RefreshToken(models.Model):
         """Check if token is still valid (not expired, not revoked)."""
         from django.utils import timezone
         return not self.revoked and self.expires_at > timezone.now()
+
+
+class MiddlewareTestModel(TenantAwareModel):
+    """Test model for middleware and tenant isolation testing. Only used in tests."""
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "core_middlewaretestmodel"
