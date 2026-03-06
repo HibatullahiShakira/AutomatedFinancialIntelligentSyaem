@@ -8,7 +8,7 @@ from django.http import HttpResponse
 import uuid
 from apps.core.middleware import CorrelationIdMiddleware, TenantContextMiddleware
 from apps.core.exceptions import AMSSException
-from apps.core.models import TenantAwareModel, MiddlewareTestModel
+from apps.core.models import MiddlewareTestModel
 
 
 def dummy_view(request):
