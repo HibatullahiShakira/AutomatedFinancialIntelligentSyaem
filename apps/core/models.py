@@ -106,3 +106,11 @@ class MiddlewareTestModel(TenantAwareModel):
 
     class Meta:
         db_table = "core_middlewaretestmodel"
+
+
+class Dummy(TenantAwareModel):
+    """Minimal model to test multi-tenancy isolation. Only used in tests."""
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        db_table = "core_dummy"

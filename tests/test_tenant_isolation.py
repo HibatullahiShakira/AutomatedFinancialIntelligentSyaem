@@ -2,17 +2,8 @@
 # See CODE_LEARNING_GUIDE.md and INTERVIEW_GUIDE.md for detailed explanation.
 
 from django.test import TestCase
-from django.db import models
-from apps.core.models import TenantAwareModel
+from apps.core.models import Dummy
 import uuid
-
-
-class Dummy(TenantAwareModel):
-    """Minimal model to test multi-tenancy."""
-    name = models.CharField(max_length=100)
-
-    class Meta:
-        app_label = "core"
 
 
 class TenantIsolationTests(TestCase):
