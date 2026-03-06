@@ -6,13 +6,13 @@ from apps.core.auth_utils import verify_access_token
 from apps.core.models import User
 
 
-class CorrelationIdMiddleware(MiddlewareMixin):  # type: ignore[misc]
+class CorrelationIdMiddleware(MiddlewareMixin):
     """Assign unique ID to every request for distributed tracing. See CODE_LEARNING_GUIDE.md"""
     def process_request(self, request: Any) -> None:
         request.correlation_id = request.headers.get("X-Correlation-ID", str(uuid.uuid4()))
 
 
-class JWTAuthenticationMiddleware(MiddlewareMixin):  # type: ignore[misc]
+class JWTAuthenticationMiddleware(MiddlewareMixin):
     """Extract and validate JWT from Authorization header."""
 
     EXEMPT_PATHS = ["/api/auth/register/", "/api/auth/login/", "/api/auth/refresh/", "/admin/"]
@@ -70,7 +70,7 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):  # type: ignore[misc]
         return None
 
 
-class TenantContextMiddleware(MiddlewareMixin):  # type: ignore[misc]
+class TenantContextMiddleware(MiddlewareMixin):
     """Inject tenant context into every request. See CODE_LEARNING_GUIDE.md"""
     def process_request(self, request: Any) -> None:
         # tenant_id is now set by JWTAuthenticationMiddleware

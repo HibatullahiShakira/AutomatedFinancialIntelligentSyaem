@@ -3,7 +3,7 @@ import uuid
 from django.contrib.auth.models import AbstractUser
 
 
-class TenantAwareModel(models.Model):  # type: ignore[misc]
+class TenantAwareModel(models.Model):
     tenant_id = models.UUIDField(default=uuid.uuid4, db_index=True)
 
     class Meta:
