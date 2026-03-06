@@ -14,14 +14,14 @@ class CorrelationIdMiddleware(MiddlewareMixin):  # type: ignore[misc]
 
 class JWTAuthenticationMiddleware(MiddlewareMixin):  # type: ignore[misc]
     """Extract and validate JWT from Authorization header."""
-    
+
     EXEMPT_PATHS = ["/api/auth/register/", "/api/auth/login/", "/api/auth/refresh/", "/admin/"]
-    
+
     def process_request(self, request: Any) -> Any:
         # Skip authentication for exempt paths
         if any(request.path.startswith(path) for path in self.EXEMPT_PATHS):
             return None
-        
+
         # Extract token from Authorization header
         auth_header = request.headers.get("Authorization")
         if not auth_header:
@@ -29,7 +29,7 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):  # type: ignore[misc]
                 {"error": "Authorization header required"},
                 status=401
             )
-        
+
         # Parse Bearer token
         parts = auth_header.split()
         if len(parts) != 2 or parts[0].lower() != "bearer":
@@ -37,9 +37,9 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):  # type: ignore[misc]
                 {"error": "Invalid Authorization header format. Use: Bearer <token>"},
                 status=401
             )
-        
+
         token = parts[1]
-        
+
         # Verify token
         payload = verify_access_token(token)
         if not payload:
@@ -47,7 +47,7 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):  # type: ignore[misc]
                 {"error": "Invalid or expired token"},
                 status=401
             )
-        
+
         # Get user from payload
         try:
             user = User.objects.get(id=payload["user_id"])
@@ -56,17 +56,17 @@ class JWTAuthenticationMiddleware(MiddlewareMixin):  # type: ignore[misc]
                 {"error": "User not found"},
                 status=401
             )
-        
+
         if not user.is_active:
             return JsonResponse(
                 {"error": "User account is inactive"},
                 status=401
             )
-        
+
         # Set request attributes
         request.user = user
         request.tenant_id = payload.get("tenant_id")
-        
+
         return None
 
 

@@ -2,7 +2,7 @@
 Role-based access control decorators for protecting API endpoints.
 """
 from functools import wraps
-from typing import Callable, Any, List
+from typing import Callable, Any
 from rest_framework.response import Response
 from rest_framework import status
 from apps.core.models import UserTenant
@@ -11,19 +11,19 @@ from apps.core.models import UserTenant
 def require_role(*allowed_roles: str) -> Callable:
     """
     Decorator to require specific role(s) for accessing an endpoint.
-    
+
     Usage:
         @require_role("OWNER")
         def delete_business(request):
             ...
-        
+
         @require_role("OWNER", "ACCOUNTANT")
         def view_finances(request):
             ...
-    
+
     Args:
         *allowed_roles: One or more role names (OWNER, ACCOUNTANT, VIEWER, SALESPERSON)
-    
+
     Returns:
         Decorated function that checks user's role in current tenant
     """
@@ -36,14 +36,14 @@ def require_role(*allowed_roles: str) -> Callable:
                     {"error": "Authentication required"},
                     status=status.HTTP_401_UNAUTHORIZED
                 )
-            
+
             # Check if tenant context is set
             if not hasattr(request, 'tenant_id') or request.tenant_id is None:
                 return Response(
                     {"error": "Tenant context not found"},
                     status=status.HTTP_400_BAD_REQUEST
                 )
-            
+
             # Get user's role in this tenant
             try:
                 user_tenant = UserTenant.objects.get(
@@ -51,7 +51,7 @@ def require_role(*allowed_roles: str) -> Callable:
                     tenant_id=request.tenant_id,
                     is_active=True
                 )
-                
+
                 if user_tenant.role not in allowed_roles:
                     return Response(
                         {
@@ -60,16 +60,16 @@ def require_role(*allowed_roles: str) -> Callable:
                         },
                         status=status.HTTP_403_FORBIDDEN
                     )
-                
+
                 # Role check passed, execute the view
                 return view_func(request, *args, **kwargs)
-                
+
             except UserTenant.DoesNotExist:
                 return Response(
                     {"error": "User does not have access to this tenant"},
                     status=status.HTTP_403_FORBIDDEN
                 )
-        
+
         return wrapper
     return decorator
 

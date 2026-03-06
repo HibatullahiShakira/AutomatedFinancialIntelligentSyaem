@@ -31,7 +31,7 @@ class UserRegistrationSerializer(serializers.Serializer):
     def create(self, validated_data: dict) -> User:
         """Create user, tenant, and assign OWNER role."""
         tenant_name = validated_data.pop("tenant_name")
-        
+
         # Create user
         user = User.objects.create_user(
             username=validated_data["username"],
@@ -40,17 +40,17 @@ class UserRegistrationSerializer(serializers.Serializer):
             first_name=validated_data.get("first_name", ""),
             last_name=validated_data.get("last_name", ""),
         )
-        
+
         # Create tenant (business)
         tenant = Tenant.objects.create(name=tenant_name)
-        
+
         # Assign user as OWNER of tenant
         UserTenant.objects.create(
             user=user,
             tenant=tenant,
             role=UserTenant.Role.OWNER
         )
-        
+
         return user
 
 
@@ -65,13 +65,13 @@ class LoginSerializer(serializers.Serializer):
         password = data.get("password")
 
         user = authenticate(username=username, password=password)
-        
+
         if user is None:
             raise serializers.ValidationError("Invalid username or password.")
-        
+
         if not user.is_active:
             raise serializers.ValidationError("User account is disabled.")
-        
+
         data["user"] = user
         return data
 
@@ -104,7 +104,7 @@ class UserSerializer(serializers.ModelSerializer):
 
 class TenantSerializer(serializers.ModelSerializer):
     """Serializer for tenant details."""
-    
+
     class Meta:
         model = Tenant
         fields = ["id", "name", "created_at", "is_active"]
