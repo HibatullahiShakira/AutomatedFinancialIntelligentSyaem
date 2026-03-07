@@ -35,7 +35,7 @@ def _build_envelope(
     tenant_id,
     payload: dict,
     user_id=None,
-    correlation_id: str = None,
+    correlation_id: str | None = None,
 ) -> dict:
     return {
         "event_id": str(uuid.uuid4()),
