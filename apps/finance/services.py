@@ -219,7 +219,7 @@ def create_journal_entry(
     posting_date: date,
     description: str,
     lines: list,
-    source: str = JournalEntrySource.MANUAL.value,
+    source: str = "MANUAL",
     posted_by=None,
     reference_number: Optional[str] = None,
 ) -> JournalEntry:
